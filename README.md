@@ -8,7 +8,13 @@
 
 `Slack That!` is a microservice to handle simple message posting to multi Slack workspace.
 
-## Work in progress.
+## Why?
+
+To avoid spreading your tokens in all your services and import a slack library when you can just easily send a HTTP POST somewhere. Or when a collaborator quit to change the token on all the services he has worked on.
+
+## Work in Progress.
+
+### Tasks 
 
 - [x] yaml parsing - workspace: token
 - [ ] Create GET / route - doc
@@ -18,6 +24,6 @@
 - [ ] Dockerize or not.
 - [ ] make the README.md more professional
 
-Ideas:
+### Ideas
 
 Run out of ideas, atm.
