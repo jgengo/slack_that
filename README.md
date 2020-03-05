@@ -10,7 +10,7 @@
 
 ## Why?
 
-To avoid spreading your tokens in all your services and import a slack library when you can just easily send a HTTP POST somewhere. Or when a collaborator quit to change the token on all the services he has worked on.
+To avoid spreading your tokens in all your services and import a slack library when you can just easily send a HTTP POST to your micro service!
 
 ## Work in Progress.
 

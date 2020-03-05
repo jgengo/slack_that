@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"path/filepath"
 
 	"github.com/slack-go/slack"
@@ -53,30 +54,22 @@ func generateTokenMap(filename string) (map[string]string, error) {
 func loadConfig() {
 	tokens, err := generateTokenMap(configFile)
 	if err != nil {
-		log.Fatalf("Error while parsing the config file.\n\t->%v", err)
+		log.Fatalf("config (error) Error while parsing the config file.\n\t->%v", err)
 	}
 
 	for k, v := range tokens {
 		gateway[k] = slack.New(v)
 	}
 
-	log.Printf("tokens:\n%v", tokens)
-
-	log.Printf("gateway:\n%v", gateway)
+	log.Println("config (success) Config file loaded.")
 }
 
 func main() {
 	if err := checkConfig(); err != nil {
-		log.Fatalf("Can't access %s\n\t-> %v", configFile, err)
+		log.Fatalf("config (error) Can't access %s\n\t-> %v", configFile, err)
 	}
 	loadConfig()
 
-	for _, v := range gateway {
-		user, err := v.GetUserByEmail("jordane@hive.fi")
-		if err != nil {
-			log.Fatalf("error while retrieving the user:\n\t->%v", err)
-		}
-		log.Printf("user:\n%v", user)
-	}
-
+	router := NewRouter()
+	http.ListenAndServe(":8080", router)
 }
