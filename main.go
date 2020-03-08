@@ -14,7 +14,8 @@ import (
 
 const configFile = "config.yml"
 
-var gateway = make(map[string]*slack.Client)
+// Gateway is the Slack API client gateway
+var Gateway = make(map[string]*slack.Client)
 
 func checkConfig() error {
 	fd, err := filepath.Abs(configFile)
@@ -58,7 +59,7 @@ func loadConfig() {
 	}
 
 	for k, v := range tokens {
-		gateway[k] = slack.New(v)
+		Gateway[k] = slack.New(v)
 	}
 
 	log.Println("config (success) Config file loaded.")
