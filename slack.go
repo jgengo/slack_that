@@ -3,12 +3,14 @@ package main
 import (
 	"errors"
 	"log"
+
+	"github.com/slack-go/slack"
 )
 
 // SlackCreate struct to store POST / body
 type SlackCreate struct {
 	Workspace string `json:"workspace"`  // mandatory
-	Channel   string `json:"channel"`    // opt
+	Channel   string `json:"channel"`    // mandatory
 	Text      string `json:"text"`       // ...
 	IconEmoji string `json:"icon_emoji"` // opt
 	Username  string `json:"username"`   // opt
@@ -22,11 +24,19 @@ func ProcessCreate(body *SlackCreate) error {
 		return errors.New("workspace isn't specified")
 	}
 
-	Gateway["hive-staff"].PostMessage(
-		"testing",
-		slack.MsgOptionText("test", false),
+	if body.Channel == "" {
+		return errors.New("channel isn't specified")
+	}
+
+	if _, ok := Gateway[body.Workspace]; !ok {
+		return errors.New("workspace doesn't exist")
+	}
+
+	Gateway[body.Workspace].PostMessage(
+		body.Channel,
+		slack.MsgOptionText(body.Text, false),
 		slack.MsgOptionIconEmoji(body.IconEmoji),
-		slack.MsgOptionUsername(body.Username)
+		slack.MsgOptionUsername(body.Username),
 	)
 
 	return nil
