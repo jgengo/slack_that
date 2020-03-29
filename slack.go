@@ -33,7 +33,7 @@ type SlackRequest struct {
 func buildParam(b *SlackRequest) []slack.MsgOption {
 	options := []slack.MsgOption{}
 
-	postParameters := &slack.PostMessageParameters{
+	postParameters := slack.PostMessageParameters{
 		Username:    b.Username,
 		AsUser:      b.AsUser,
 		Parse:       b.Parse,
@@ -46,10 +46,17 @@ func buildParam(b *SlackRequest) []slack.MsgOption {
 		EscapeText:  b.EscapeText,
 	}
 
-	options = append(options, slack.MsgOptionPostMessageParameters(*postParameters))
+	options = append(options, slack.MsgOptionPostMessageParameters(postParameters))
 	options = append(options, slack.MsgOptionText(b.Text, true))
+
+	// TODO: Blocks and Attachments ... not gonna be easy :(
+
 	// if b.Blocks != "" {
-	// 	blocks := slack.NewSectionBlock(slack.NewTextBlockObject("plain_text", b.Blocks, true, false), nil, nil)
+	// 	blocks := slack.NewSectionBlock(
+	// 		slack.NewTextBlockObject("plain_text", b.Blocks, true, false),
+	// 		nil,
+	// 		nil,
+	// 	)
 	// 	options = append(options, slack.MsgOptionBlocks(blocks))
 	// }
 
@@ -71,10 +78,7 @@ func newSlackTask() *SlackTask {
 func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []slack.MsgOption) {
 	s.limit.Wait(context.Background())
 
-	_, _, err := Gateway[body.Workspace].PostMessage(
-		channel,
-		options...,
-	)
+	_, _, err := Gateway[body.Workspace].PostMessage(channel, options...)
 
 	if err != nil {
 		log.Printf("error while trying to send %v:\n\t->%v", body, err)

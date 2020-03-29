@@ -27,18 +27,18 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.Unmarshal(body, &bodyParsed); err != nil {
-		log.Panicf("http/json: (error) while Unmarshall body: %v\n", err)
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusUnprocessableEntity)
+		log.Panicf("http/json: (error) while Unmarshall body: %v\n", err) // TODO: review this
 		if err := json.NewEncoder(w).Encode(err); err != nil {
 			log.Panicf("http/json: (error) while encoding the error: %v\n", err)
 		}
 	}
 
 	if err := ProcessCreate(&bodyParsed); err != nil {
-		log.Panicf("http/json: (error) while processing ProcessCreate: %v\n", err)
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusUnprocessableEntity)
+		log.Panicf("http/json: (error) while processing ProcessCreate: %v\n", err) // TODO: review this
 		if err := json.NewEncoder(w).Encode(err); err != nil {
 			log.Panicf("http/json: (error) while encoding the error: %v\n", err)
 		}
