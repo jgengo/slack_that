@@ -11,13 +11,50 @@ import (
 
 var s = newSlackTask()
 
-// SlackCreate struct to store POST / body
-type SlackCreate struct {
-	Workspace string `json:"workspace"`  // mandatory
-	Channel   string `json:"channel"`    // mandatory
-	Text      string `json:"text"`       // ...
-	IconEmoji string `json:"icon_emoji"` // opt
-	Username  string `json:"username"`   // opt
+// SlackRequest ...
+type SlackRequest struct {
+	Workspace   string   `json:"workspace"`
+	Channels    []string `json:"channels"`
+	Username    string   `json:"username"`
+	AsUser      bool     `json:"as_user"`
+	Parse       string   `json:"parse"`
+	LinkNames   int      `json:"link_names"`
+	UnfurlLinks bool     `json:"unfurl_links"`
+	UnfurlMedia bool     `json:"unfurl_media"`
+	IconURL     string   `json:"icon_url"`
+	IconEmoji   string   `json:"icon_emoji"`
+	Markdown    bool     `json:"mrkdwn,omitempty"`
+	EscapeText  bool     `json:"escape_text"`
+	Text        string   `json:"text"`
+	Blocks      string   `json:"blocks"`
+	Attachments string   `json:"attachments"`
+}
+
+func buildParam(b *SlackRequest) []slack.MsgOption {
+	options := []slack.MsgOption{}
+
+	postParameters := &slack.PostMessageParameters{
+		Username:    b.Username,
+		AsUser:      b.AsUser,
+		Parse:       b.Parse,
+		LinkNames:   b.LinkNames,
+		UnfurlLinks: b.UnfurlLinks,
+		UnfurlMedia: b.UnfurlMedia,
+		IconURL:     b.IconURL,
+		IconEmoji:   b.IconEmoji,
+		Markdown:    b.Markdown,
+		EscapeText:  b.EscapeText,
+	}
+
+	options = append(options, slack.MsgOptionPostMessageParameters(*postParameters))
+	options = append(options, slack.MsgOptionText(b.Text, true))
+	// if b.Blocks != "" {
+	// 	blocks := slack.NewSectionBlock(slack.NewTextBlockObject("plain_text", b.Blocks, true, false), nil, nil)
+	// 	options = append(options, slack.MsgOptionBlocks(blocks))
+	// }
+
+	return options
+
 }
 
 // SlackTask ...
@@ -31,29 +68,26 @@ func newSlackTask() *SlackTask {
 	}
 }
 
-func (s *SlackTask) doSlackTask(body *SlackCreate) {
+func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []slack.MsgOption) {
 	s.limit.Wait(context.Background())
-	resp, _, err := Gateway[body.Workspace].PostMessage(
-		body.Channel,
-		slack.MsgOptionText(body.Text, false),
-		slack.MsgOptionIconEmoji(body.IconEmoji),
-		slack.MsgOptionUsername(body.Username),
+
+	_, _, err := Gateway[body.Workspace].PostMessage(
+		channel,
+		options...,
 	)
+
 	if err != nil {
 		log.Printf("error while trying to send %v:\n\t->%v", body, err)
 	}
-	log.Println(resp)
 }
 
 // ProcessCreate will threat the body and do the job!
-func ProcessCreate(body *SlackCreate) error {
-	displayBody(body)
-
+func ProcessCreate(body *SlackRequest) error {
 	if body.Workspace == "" {
 		return errors.New("workspace isn't specified")
 	}
 
-	if body.Channel == "" {
+	if len(body.Channels) == 0 {
 		return errors.New("channel isn't specified")
 	}
 
@@ -61,11 +95,11 @@ func ProcessCreate(body *SlackCreate) error {
 		return errors.New("workspace doesn't exist")
 	}
 
-	go s.doSlackTask(body)
+	myParam := buildParam(body)
+
+	for _, channel := range body.Channels {
+		go s.doSlackTask(channel, body, myParam)
+	}
 
 	return nil
-}
-
-func displayBody(body *SlackCreate) {
-	log.Printf("body: %+v", body)
 }
