@@ -13,21 +13,21 @@ var s = newSlackTask()
 
 // SlackRequest ...
 type SlackRequest struct {
-	Workspace   string   `json:"workspace"`
-	Channels    []string `json:"channels"`
-	Username    string   `json:"username"`
-	AsUser      bool     `json:"as_user"`
-	Parse       string   `json:"parse"`
-	LinkNames   int      `json:"link_names"`
-	UnfurlLinks bool     `json:"unfurl_links"`
-	UnfurlMedia bool     `json:"unfurl_media"`
-	IconURL     string   `json:"icon_url"`
-	IconEmoji   string   `json:"icon_emoji"`
-	Markdown    bool     `json:"mrkdwn,omitempty"`
-	EscapeText  bool     `json:"escape_text"`
-	Text        string   `json:"text"`
-	Blocks      string   `json:"blocks"`
-	Attachments string   `json:"attachments"`
+	Workspace   string               `json:"workspace"`
+	Channels    []string             `json:"channels"`
+	Username    string               `json:"username"`
+	AsUser      bool                 `json:"as_user"`
+	Parse       string               `json:"parse"`
+	LinkNames   int                  `json:"link_names"`
+	UnfurlLinks bool                 `json:"unfurl_links"`
+	UnfurlMedia bool                 `json:"unfurl_media"`
+	IconURL     string               `json:"icon_url"`
+	IconEmoji   string               `json:"icon_emoji"`
+	Markdown    bool                 `json:"mrkdwn,omitempty"`
+	EscapeText  bool                 `json:"escape_text"`
+	Text        string               `json:"text"`
+	Blocks      []slack.SectionBlock `json:"blocks"`
+	Attachments string               `json:"attachments"`
 }
 
 func buildParam(b *SlackRequest) []slack.MsgOption {
@@ -49,16 +49,13 @@ func buildParam(b *SlackRequest) []slack.MsgOption {
 	options = append(options, slack.MsgOptionPostMessageParameters(postParameters))
 	options = append(options, slack.MsgOptionText(b.Text, true))
 
-	// TODO: Blocks and Attachments ... not gonna be easy :(
+	if len(b.Blocks) != 0 {
+		for _, block := range b.Blocks {
+			options = append(options, slack.MsgOptionBlocks(block))
+		}
+	}
 
-	// if b.Blocks != "" {
-	// 	blocks := slack.NewSectionBlock(
-	// 		slack.NewTextBlockObject("plain_text", b.Blocks, true, false),
-	// 		nil,
-	// 		nil,
-	// 	)
-	// 	options = append(options, slack.MsgOptionBlocks(blocks))
-	// }
+	//TODO: Implement Attachments
 
 	return options
 
