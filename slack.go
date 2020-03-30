@@ -27,7 +27,7 @@ type SlackRequest struct {
 	EscapeText  bool                 `json:"escape_text"`
 	Text        string               `json:"text"`
 	Blocks      []slack.SectionBlock `json:"blocks"`
-	Attachments string               `json:"attachments"`
+	Attachments []slack.Attachment   `json:"attachments"`
 }
 
 func buildParam(b *SlackRequest) []slack.MsgOption {
@@ -55,7 +55,11 @@ func buildParam(b *SlackRequest) []slack.MsgOption {
 		}
 	}
 
-	//TODO: Implement Attachments
+	if len(b.Attachments) != 0 {
+		for _, attachment := range b.Attachments {
+			options = append(options, slack.MsgOptionAttachments(attachment))
+		}
+	}
 
 	return options
 
