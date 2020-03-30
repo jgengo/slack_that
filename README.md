@@ -18,8 +18,8 @@ To avoid spreading your tokens in all your services and import a slack library w
 
 - [x] yaml parsing - workspace: token
 - [ ] Create GET / route - doc
-- [ ] Designing the POST route
-- [ ] Create POST / - send message
+- [x] Designing the POST route
+- [x] Create POST / - send message
 - [ ] Secure the POST route
 - [ ] Dockerize or not.
 - [ ] make the README.md more professional
