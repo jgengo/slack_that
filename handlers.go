@@ -7,11 +7,25 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"reflect"
 )
 
 // Index is called when it receives a GET on /
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Welcome!")
+	html := ""
+	e := reflect.ValueOf(&SlackRequest{}).Elem()
+	fmt.Println(e)
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	for i := 0; i < e.NumField(); i++ {
+		varName := e.Type().Field(i).Name
+		varType := e.Type().Field(i).Type
+
+		html += fmt.Sprintf("<tr><td style='width: 12em;'>%v</td><td>%v</td></tr>\n", varName, varType)
+	}
+
+	fmt.Fprintln(w, "Welcome!<br /><br /><table>"+html+"</table>")
 }
 
 // Create is called when it receives a new POST on /
