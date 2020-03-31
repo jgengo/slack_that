@@ -58,3 +58,8 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+// Health for health checking the service.
+func Health(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
