@@ -20,6 +20,7 @@ To avoid spreading your tokens in all your services and import a slack library w
 - [ ] Create GET / route - doc
 - [x] Designing the POST route
 - [x] Create POST / - send message
+- [x] Throttle the slack postMessage to avoid rate limit
 - [ ] Secure the POST route
 - [ ] Dockerize or not.
 - [ ] make the README.md more professional
