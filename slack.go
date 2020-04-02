@@ -30,7 +30,28 @@ type SlackRequest struct {
 	Attachments []slack.Attachment   `json:"attachments"`
 }
 
-func buildParam(b *SlackRequest) []slack.MsgOption {
+// SlackTask ...
+type SlackTask struct {
+	limit *rate.Limiter
+}
+
+func newSlackTask() *SlackTask {
+	return &SlackTask{
+		limit: rate.NewLimiter(1, 1),
+	}
+}
+
+func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []slack.MsgOption) {
+	s.limit.Wait(context.Background())
+
+	_, _, err := Gateway[body.Workspace].PostMessage(channel, options...)
+
+	if err != nil {
+		log.Printf("error while trying to send %v:\n\t->%v", body, err)
+	}
+}
+
+func (b *SlackRequest) buildParam() []slack.MsgOption {
 	options := []slack.MsgOption{}
 
 	postParameters := slack.PostMessageParameters{
@@ -62,48 +83,26 @@ func buildParam(b *SlackRequest) []slack.MsgOption {
 	}
 
 	return options
-
-}
-
-// SlackTask ...
-type SlackTask struct {
-	limit *rate.Limiter
-}
-
-func newSlackTask() *SlackTask {
-	return &SlackTask{
-		limit: rate.NewLimiter(1, 1),
-	}
-}
-
-func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []slack.MsgOption) {
-	s.limit.Wait(context.Background())
-
-	_, _, err := Gateway[body.Workspace].PostMessage(channel, options...)
-
-	if err != nil {
-		log.Printf("error while trying to send %v:\n\t->%v", body, err)
-	}
 }
 
 // ProcessCreate will threat the body and do the job!
-func ProcessCreate(body *SlackRequest) error {
-	if body.Workspace == "" {
+func (b *SlackRequest) ProcessCreate() error {
+	if b.Workspace == "" {
 		return errors.New("workspace isn't specified")
 	}
 
-	if len(body.Channels) == 0 {
+	if len(b.Channels) == 0 {
 		return errors.New("channel isn't specified")
 	}
 
-	if _, ok := Gateway[body.Workspace]; !ok {
+	if _, ok := Gateway[b.Workspace]; !ok {
 		return errors.New("workspace doesn't exist")
 	}
 
-	myParam := buildParam(body)
+	myParam := b.buildParam()
 
-	for _, channel := range body.Channels {
-		go s.doSlackTask(channel, body, myParam)
+	for _, channel := range b.Channels {
+		go s.doSlackTask(channel, b, myParam)
 	}
 
 	return nil
