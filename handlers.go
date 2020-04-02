@@ -39,19 +39,23 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		log.Panicf("net/http (error) while reading body: %v\n", err)
+		return
 	}
 	if err := r.Body.Close(); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		log.Panicf("net/http: (error) while closing the reader: %v\n", err)
+		return
 	}
 
 	if err := json.Unmarshal(body, &bodyParsed); err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(http.StatusUnprocessableEntity)
 		json.NewEncoder(w).Encode(
 			ErrorResponse{err.Error()},
 		)
 		log.Printf("http/json: (error) while Unmarshall body: %v\n", err)
+		return
 	}
 
 	if err := bodyParsed.ProcessCreate(); err != nil {
@@ -61,6 +65,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 			ErrorResponse{err.Error()},
 		)
 		log.Printf("http/json: (error) while processing ProcessCreate: %v\n", err)
+		return
 	}
 }
 
