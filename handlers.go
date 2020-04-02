@@ -35,22 +35,16 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 // Create is called when it receives a new POST on /
 func Create(w http.ResponseWriter, r *http.Request) {
-	bodyParsed := &SlackRequest{}
-
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		log.Panicf("net/http (error) while reading body: %v\n", err)
 		return
 	}
-	if err := r.Body.Close(); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		log.Panicf("net/http: (error) while closing the reader: %v\n", err)
-		return
-	}
+	defer r.Body.Close()
 
-	if err := json.Unmarshal(body, &bodyParsed); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	bodyParsed := &SlackRequest{}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	if err := json.Unmarshal(body, bodyParsed); err != nil {
 		json.NewEncoder(w).Encode(
 			ErrorResponse{err.Error()},
 		)
@@ -59,7 +53,6 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := bodyParsed.ProcessCreate(); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		json.NewEncoder(w).Encode(
 			ErrorResponse{err.Error()},
