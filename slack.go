@@ -85,18 +85,24 @@ func (b *SlackRequest) buildParam() []slack.MsgOption {
 	return options
 }
 
-// ProcessCreate will threat the body and do the job!
-func (b *SlackRequest) ProcessCreate() error {
+// checkParam is checking required params are present.
+func (b *SlackRequest) checkParam() error {
 	if b.Workspace == "" {
 		return errors.New("workspace isn't specified")
 	}
-
 	if len(b.Channels) == 0 {
 		return errors.New("channel isn't specified")
 	}
-
 	if _, ok := Gateway[b.Workspace]; !ok {
 		return errors.New("workspace doesn't exist")
+	}
+	return nil
+}
+
+// ProcessCreate will threat the body and do the job!
+func (b *SlackRequest) ProcessCreate() error {
+	if err := b.checkParam(); err != nil {
+		return err
 	}
 
 	myParam := b.buildParam()
