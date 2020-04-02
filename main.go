@@ -72,5 +72,5 @@ func main() {
 	loadConfig()
 
 	router := NewRouter()
-	http.ListenAndServe(":8080", router)
+	http.ListenAndServe("localhost:8080", router)
 }
