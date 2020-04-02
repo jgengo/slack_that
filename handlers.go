@@ -15,6 +15,11 @@ type ErrorResponse struct {
 	Error string `json:"error"`
 }
 
+// SuccessResponse struct to respond back success message
+type SuccessResponse struct {
+	Success string `json:"success"`
+}
+
 // Index is called when it receives a GET on /
 func Index(w http.ResponseWriter, r *http.Request) {
 	html := ""
@@ -45,21 +50,21 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	bodyParsed := &SlackRequest{}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err := json.Unmarshal(body, bodyParsed); err != nil {
-		json.NewEncoder(w).Encode(
-			ErrorResponse{err.Error()},
-		)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		json.NewEncoder(w).Encode(ErrorResponse{err.Error()})
 		log.Printf("http/json: (error) while Unmarshall body: %v\n", err)
 		return
 	}
 
 	if err := bodyParsed.ProcessCreate(); err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
-		json.NewEncoder(w).Encode(
-			ErrorResponse{err.Error()},
-		)
+		json.NewEncoder(w).Encode(ErrorResponse{err.Error()})
 		log.Printf("http/json: (error) while processing ProcessCreate: %v\n", err)
 		return
 	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(SuccessResponse{"request queued"})
 }
 
 // Health for health checking the service.

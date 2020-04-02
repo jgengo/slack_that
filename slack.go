@@ -51,6 +51,21 @@ func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []sl
 	}
 }
 
+// ProcessCreate will threat the body and do the job!
+func (b *SlackRequest) ProcessCreate() error {
+	if err := b.checkParam(); err != nil {
+		return err
+	}
+
+	myParam := b.buildParam()
+
+	for _, channel := range b.Channels {
+		go s.doSlackTask(channel, b, myParam)
+	}
+
+	return nil
+}
+
 func (b *SlackRequest) buildParam() []slack.MsgOption {
 	options := []slack.MsgOption{}
 
@@ -85,7 +100,6 @@ func (b *SlackRequest) buildParam() []slack.MsgOption {
 	return options
 }
 
-// checkParam is checking required params are present.
 func (b *SlackRequest) checkParam() error {
 	if b.Workspace == "" {
 		return errors.New("workspace isn't specified")
@@ -96,20 +110,5 @@ func (b *SlackRequest) checkParam() error {
 	if _, ok := Gateway[b.Workspace]; !ok {
 		return errors.New("workspace doesn't exist")
 	}
-	return nil
-}
-
-// ProcessCreate will threat the body and do the job!
-func (b *SlackRequest) ProcessCreate() error {
-	if err := b.checkParam(); err != nil {
-		return err
-	}
-
-	myParam := b.buildParam()
-
-	for _, channel := range b.Channels {
-		go s.doSlackTask(channel, b, myParam)
-	}
-
 	return nil
 }
