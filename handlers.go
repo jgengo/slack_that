@@ -10,6 +10,11 @@ import (
 	"reflect"
 )
 
+// ErrorResponse struct to respond back error message
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
 // Index is called when it receives a GET on /
 func Index(w http.ResponseWriter, r *http.Request) {
 	html := ""
@@ -43,19 +48,19 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(body, &bodyParsed); err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusUnprocessableEntity)
-		log.Panicf("http/json: (error) while Unmarshall body: %v\n", err) // TODO: review this
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			log.Panicf("http/json: (error) while encoding the error: %v\n", err)
-		}
+		json.NewEncoder(w).Encode(
+			ErrorResponse{err.Error()},
+		)
+		log.Printf("http/json: (error) while Unmarshall body: %v\n", err)
 	}
 
 	if err := bodyParsed.ProcessCreate(); err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusUnprocessableEntity)
-		log.Panicf("http/json: (error) while processing ProcessCreate: %v\n", err) // TODO: review this
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			log.Panicf("http/json: (error) while encoding the error: %v\n", err)
-		}
+		json.NewEncoder(w).Encode(
+			ErrorResponse{err.Error()},
+		)
+		log.Printf("http/json: (error) while processing ProcessCreate: %v\n", err)
 	}
 }
 
