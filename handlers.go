@@ -20,7 +20,7 @@ type SuccessResponse struct {
 
 // Index is called when it receives a GET on /
 func Index(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./index.html")
+	http.ServeFile(w, r, "./static/index.html")
 }
 
 // Create is called when it receives a new POST on /

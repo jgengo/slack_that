@@ -104,13 +104,17 @@ func (b *SlackRequest) buildParam() []slack.MsgOption {
 
 func (b *SlackRequest) checkParam() error {
 	if b.Workspace == "" {
-		return errors.New("workspace isn't specified")
-	}
-	if len(b.Channels) == 0 {
-		return errors.New("channel isn't specified")
+		return errors.New("workspace is required")
 	}
 	if _, ok := Gateway[b.Workspace]; !ok {
-		return errors.New("workspace doesn't exist")
+		return errors.New("workspace not found")
 	}
+	if len(b.Channels) == 0 {
+		return errors.New("channel is required")
+	}
+	if len(b.Blocks) == 0 && len(b.Attachments) == 0 && b.Text == "" {
+		return errors.New("text is required")
+	}
+
 	return nil
 }

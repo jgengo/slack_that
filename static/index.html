@@ -69,8 +69,10 @@
                 e.g: <code>"channels": ["report", "general"]</code>    
 
             <b>text</b>
-                <i>required</i>
+                <i>required if no <a href="#blocks">blocks</a> or <a href="#attachments">attachments</a></i>
 
+                Message to send.
+                
                 e.g: <code>"text": "Hello World!"</code>
             <b>as_user</b>    
                 <i>optional</i>
@@ -136,14 +138,14 @@
 
                 e.g: <code>"mrkdwn": false</code>
 
-            <b>blocks</b>
+            <b id="blocks">blocks</b>
                 <i>optional</i>
                 
                 A JSON-based array of structured blocks, presented as a URL-encoded string.
 
                 e.g: <code>"blocks": [{"type": "section", "text": {"type": "plain_text", "text": "Hello world"}}]</code>
 
-            <b>attachments</b>
+            <b id="attachments">attachments</b>
                 <i>optional</i>
 
                 A JSON-based array of structured attachments, presented as a URL-encoded string.
