@@ -2,12 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"reflect"
 )
 
 // ErrorResponse struct to respond back error message
@@ -22,27 +20,14 @@ type SuccessResponse struct {
 
 // Index is called when it receives a GET on /
 func Index(w http.ResponseWriter, r *http.Request) {
-	html := ""
-	e := reflect.ValueOf(&SlackRequest{}).Elem()
-	fmt.Println(e)
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
-	for i := 0; i < e.NumField(); i++ {
-		varName := e.Type().Field(i).Name
-		varType := e.Type().Field(i).Type
-
-		html += fmt.Sprintf("<tr><td style='width: 12em;'>%v</td><td>%v</td></tr>\n", varName, varType)
-	}
-
-	fmt.Fprintln(w, "Welcome!<br /><br /><table>"+html+"</table>")
+	http.ServeFile(w, r, "./index.html")
 }
 
 // Create is called when it receives a new POST on /
 func Create(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		log.Panicf("%snet/http (warning)%s while reading the body's request. (%v)\n", Yellow, Reset, err)
+		log.Panicf("%shttp (warning)%s while reading the body's request. (%v)\n", Yellow, Reset, err)
 		return
 	}
 	defer r.Body.Close()
@@ -52,14 +37,14 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(body, bodyParsed); err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		json.NewEncoder(w).Encode(ErrorResponse{err.Error()})
-		log.Printf("%shttp/json: (warning)%s while unmarshalling the body's request. (%v)\n", Yellow, Reset, err)
+		log.Printf("%sjson: (warning)%s while unmarshalling the body's request. (%v)\n", Yellow, Reset, err)
 		return
 	}
 
 	if err := bodyParsed.ProcessCreate(); err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		json.NewEncoder(w).Encode(ErrorResponse{err.Error()})
-		log.Printf("%shttp/json: (warning)%s while processing ProcessCreate(). (%v)\n", Yellow, Reset, err)
+		log.Printf("%sjson: (warning)%s while processing ProcessCreate(). (%v)\n", Yellow, Reset, err)
 		return
 	}
 
@@ -70,4 +55,5 @@ func Create(w http.ResponseWriter, r *http.Request) {
 // Health for health checking the service.
 func Health(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(SuccessResponse{"ok"})
 }

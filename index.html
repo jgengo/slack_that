@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlackThat!</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi+2&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    body {font-family: 'Baloo Thambi 2', cursive;}
+
+    pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        word-break: normal;
+    }
+    pre code { 
+        background-color: #f8f8f8; 
+        color: #e01e5a;
+        white-space: normal;
+        font-size: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 0.2rem;
+        margin: 10px 0 10px 0; 
+        padding: 2px 3px 1px;
+        display: inline-block;
+        }
+    pre pre {
+        margin-top: 4px;
+        margin-bottom: 4px;
+        padding: 8px;
+        border: 1px solid #ddd;
+        background-color: #f8f8f8; 
+        tab-size: 4;
+        border-radius: 4px;
+        display: inline-block
+    }
+</style>
+
+<body>
+    <pre style="word-wrap: break-word; white-space: pre-wrap;">
+    slackthat!(1)                             SLACKTHAT!                             slackthat!(1)
+
+
+    INTRO
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos eum veniam
+            ad tempora non consectetur ipsam delectus consequatur. 
+            Nemo, labore eius! In consectetur beatae placeat! Provident quaerat aspernatur 
+            perferendis ipsam.
+
+
+    PARAMS
+
+            <b>workspace</b>       
+                <i>required</i>
+
+                Workspace name to send the message
+
+                e.g: <code>"workspace": "my-workspace"</code> 
+
+            <b>channels</b>
+                <i>required</i>
+
+                Channel, private group, or IM channel to send message to. 
+                Can be an encoded ID, or a name array.
+                    
+                e.g: <code>"channels": ["report", "general"]</code>    
+
+            <b>text</b>
+                <i>required</i>
+
+                e.g: <code>"text": "Hello World!"</code>
+            <b>as_user</b>    
+                <i>optional</i>
+
+                Pass true to post the message as the authed user, instead of as a bot. 
+                Defaults to false
+
+                e.g: <code>"as_user": true</code>
+
+            <b>username</b>
+                <i>optional</i>
+
+                Set your bot's user name. Must be used in conjunction with <code>as_user</code> 
+                set to false, otherwise ignored.
+    
+                e.g: <code>"username": "My Bot"</code>
+
+            <b>parse</b>
+                <i>optional</i>
+
+                Change how messages are treated. Defaults to <code>none</code>. See <a href="https://api.slack.com/methods/chat.postMessage#formatting">here</a>.
+                e.g: <code>"parse": "full"</code>
+
+            <b>link_names</b>
+                <i>optional</i>
+
+                Find and link channel names and usernames.
+
+                e.g: <code>"link_names": true</code>
+
+            <b>unfurl_links</b>
+                <i>optional</i>
+
+                Pass true to enable unfurling of primarily text-based content.
+
+                e.g: <code>"unfurl_links": true</code>
+
+            <b>unfurl_media</b>         
+                <i>optional</i>
+
+                Pass false to disable unfurling of media content.
+
+                e.g: <code>"unfurl_media": true</code>
+
+            <b>icon_url</b>         
+                <i>optional</i>
+                
+                URL to an image to use as the icon for this message. Must be used 
+                in conjunction with as_user set to false, otherwise ignored. See <a href="https://api.slack.com/methods/chat.postMessage#authorship">authorship</a>. 
+                e.g: <code>"icon_url": "http://lorempixel.com/48/48"</code>
+
+            <b>icon_emoji</b>
+                <i>optional</i>
+
+                Emoji to use as the icon for this message. Overrides icon_url. Must be used 
+                in conjunction with as_user set to false, otherwise ignored. See <a href="https://api.slack.com/methods/chat.postMessage#authorship">authorship</a>. 
+                e.g: <code>"icon_emoji": ":joy:"</code>
+
+            <b>mrkdwn</b>
+                <i>optional</i>
+                
+                Disable Slack markup parsing by setting to false. Enabled by default
+
+                e.g: <code>"mrkdwn": false</code>
+
+            <b>blocks</b>
+                <i>optional</i>
+                
+                A JSON-based array of structured blocks, presented as a URL-encoded string.
+
+                e.g: <code>"blocks": [{"type": "section", "text": {"type": "plain_text", "text": "Hello world"}}]</code>
+
+            <b>attachments</b>
+                <i>optional</i>
+
+                A JSON-based array of structured attachments, presented as a URL-encoded string.
+
+                e.g: <code>"attachments": [{"pretext": "pre-hello", "text": "text-world"}]</code>
+
+    EXAMPLE
+
+        <pre>
+{
+    "workspace": "my-workspace",  
+    "channels": ["#general"],
+    "username": "News",
+    "text": "Read that news!",
+    "attachments": [
+        {
+            "fallback": "Required plain-text summary of the attachment.",
+            "color": "#36a64f",
+            "pretext": "Optional text that appears above the attachment block",
+            "author_name": "Bobby Tables",
+            "author_link": "http://flickr.com/bobby/",
+            "author_icon": "http://flickr.com/icons/bobby.jpg",
+            "title": "Slack API Documentation",
+            "title_link": "https://api.slack.com/",
+            "text": "Optional text that appears within the attachment",
+            "fields": [
+                {
+                    "title": "Priority",
+                    "value": "High",
+                    "short": false
+                }
+            ],
+            "image_url": "http://my-website.com/path/to/image.jpg",
+            "thumb_url": "http://example.com/path/to/thumb.png",
+            "footer": "Slack API",
+            "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+            "ts": 123456789
+        }
+    ],
+    "icon_emoji": ":rolled_up_newspaper:"
+}
+    </pre>
+    </pre>
+

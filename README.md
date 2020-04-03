@@ -17,7 +17,7 @@ To avoid spreading your tokens in all your services and import a slack library w
 ### Tasks 
 
 - [x] yaml parsing - workspace: token
-- [ ] Create GET / route - doc
+- [x] Create GET / route - doc
 - [x] Designing the POST route
 - [x] Create POST / - send message
 - [x] Throttle the slack postMessage to avoid rate limit
