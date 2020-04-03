@@ -47,7 +47,7 @@ func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []sl
 	_, _, err := Gateway[body.Workspace].PostMessage(channel, options...)
 
 	if err != nil {
-		log.Printf("error while trying to send %v:\n\t->%v", body, err)
+		log.Printf("%sgo-slack/slack (error)%s while trying to PostMessage(). (%v)", Red, Reset, err)
 	}
 }
 

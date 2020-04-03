@@ -25,6 +25,6 @@ func NewRouter() *mux.Router {
 			Handler(handler)
 	}
 
-	log.Println("net/http (success) listening...")
+	log.Println("net/http (info) listening...")
 	return router
 }

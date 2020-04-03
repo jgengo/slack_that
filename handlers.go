@@ -42,7 +42,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 func Create(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		log.Panicf("net/http (error) while reading body: %v\n", err)
+		log.Panicf("%snet/http (warning)%s while reading the body's request. (%v)\n", Yellow, Reset, err)
 		return
 	}
 	defer r.Body.Close()
@@ -52,14 +52,14 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(body, bodyParsed); err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		json.NewEncoder(w).Encode(ErrorResponse{err.Error()})
-		log.Printf("http/json: (error) while Unmarshall body: %v\n", err)
+		log.Printf("%shttp/json: (warning)%s while unmarshalling the body's request. (%v)\n", Yellow, Reset, err)
 		return
 	}
 
 	if err := bodyParsed.ProcessCreate(); err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		json.NewEncoder(w).Encode(ErrorResponse{err.Error()})
-		log.Printf("http/json: (error) while processing ProcessCreate: %v\n", err)
+		log.Printf("%shttp/json: (warning)%s while processing ProcessCreate(). (%v)\n", Yellow, Reset, err)
 		return
 	}
 

@@ -14,6 +14,13 @@ import (
 
 const configFile = "config.yml"
 
+const (
+	Reset  = "\033[0m"
+	Red    = "\033[31m"
+	Green  = "\033[32m"
+	Yellow = "\033[1;33m"
+)
+
 // Gateway is the Slack API client gateway
 var Gateway = make(map[string]*slack.Client)
 
@@ -55,19 +62,31 @@ func generateTokenMap(filename string) (map[string]string, error) {
 func loadConfig() {
 	tokens, err := generateTokenMap(configFile)
 	if err != nil {
-		log.Fatalf("config (error) Error while parsing the config file.\n\t->%v", err)
+		log.Fatalf("%sconfig (error)%s error while parsing the config file. (%v)", Red, Reset, err)
 	}
 
 	for k, v := range tokens {
 		Gateway[k] = slack.New(v)
+		_, err := Gateway[k].AuthTest()
+		if err != nil {
+			log.Printf(
+				"%sconfig (warning)%s auth test failed for '%s', deleted from the loaded tokens\n",
+				Yellow, Reset, k,
+			)
+			delete(Gateway, k)
+		} else {
+			log.Printf("config (info) auth test successful for '%s'.", k)
+		}
+
 	}
 
-	log.Println("config (success) Config file loaded.")
+	log.Println("config (info) config file successfully loaded.")
 }
 
 func main() {
+	log.Println("config (info) loading config...")
 	if err := checkConfig(); err != nil {
-		log.Fatalf("config (error) Can't access %s\n\t-> %v", configFile, err)
+		log.Fatalf("%sconfig (error)%s can't access '%s'. (%v)\n", Red, Reset, configFile, err)
 	}
 	loadConfig()
 
