@@ -28,7 +28,7 @@
         display: inline-block;
         }
     pre pre {
-        margin-left: 6em;
+        margin-left: 5em;
         margin-top: 4px;
         margin-bottom: 4px;
         padding: 8px;
@@ -42,18 +42,21 @@
 
 <body>
     <pre>
-    slackthat!(1)                             SLACKTHAT!                             slackthat!(1)
+    slackthat!(1)                                SLACKTHAT!                                slackthat!(1)
 
 
-    INTRO
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos eum veniam
-            ad tempora non consectetur ipsam delectus consequatur. 
-            Nemo, labore eius! In consectetur beatae placeat! Provident quaerat aspernatur 
-            perferendis ipsam.
+    <b>DESCRIPTION</b>
+            <code>SlackThat!</code> is a microservice to handle simple message posting to multi Slack workspace.
+            The main goal is to avoid spreading your tokens in all your services and import a slack 
+            library when you can just simply send a HTTP POST to your micro service!
 
 
-    PARAMS
+    <b>FACTS</b>
+            Method URL: <code>/</code>
+           HTTP Method: <code>POST</code>
+         Content-types: <code>application/json</code>
 
+    <b>ARGUMENTS</b>
             <b>workspace</b>       
                 <i>required</i>
 
@@ -61,13 +64,13 @@
 
                 e.g: <code>"workspace": "my-workspace"</code> 
 
-            <b>channels</b>
+            <b>channel</b>
                 <i>required</i>
 
                 Channel, private group, or IM channel to send message to. 
                 Can be an encoded ID, or a name array.
                     
-                e.g: <code>"channels": ["report", "general"]</code>    
+                e.g: <code>"channel": "#report"</code>    
 
             <b>text</b>
                 <i>required if no <a href="#blocks">blocks</a> or <a href="#attachments">attachments</a></i>
@@ -144,7 +147,7 @@
                 
                 A JSON-based array of structured <a href="https://api.slack.com/messaging/composing/layouts#adding-blocks">blocks</a>, presented as a URL-encoded string.
 
-                e.g: <code>"blocks": [{"type": "section", "text": {"type": "plain_text", "text": "Hello world"}}]</code>
+                e.g: <code>"blocks": [{"type": "section", "text": {"type": "plain_text", "text": "Hello"}}]</code>
 
             <b id="attachments">attachments</b>
                 <i>optional</i>
@@ -153,12 +156,11 @@
 
                 e.g: <code>"attachments": [{"pretext": "pre-hello", "text": "text-world"}]</code>
 
-    EXAMPLE
-
+    <b>POST EXAMPLE</b>
     <pre>
 {
     "workspace": "my-workspace",  
-    "channels": ["#general"],
+    "channel": "#general",
     "username": "News",
     "text": "Read that news!",
     "attachments": [

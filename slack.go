@@ -14,7 +14,7 @@ var s = newSlackTask()
 // SlackRequest ...
 type SlackRequest struct {
 	Workspace   string               `json:"workspace"`
-	Channels    []string             `json:"channels"`
+	Channel     string               `json:"channel"`
 	Username    string               `json:"username"`
 	AsUser      bool                 `json:"as_user"`
 	Parse       string               `json:"parse"`
@@ -24,7 +24,6 @@ type SlackRequest struct {
 	IconURL     string               `json:"icon_url"`
 	IconEmoji   string               `json:"icon_emoji"`
 	Markdown    bool                 `json:"mrkdwn,omitempty"`
-	EscapeText  bool                 `json:"escape_text"`
 	Text        string               `json:"text"`
 	Blocks      []slack.SectionBlock `json:"blocks"`
 	Attachments []slack.Attachment   `json:"attachments"`
@@ -61,10 +60,7 @@ func (b *SlackRequest) ProcessCreate() error {
 
 	myParam := b.buildParam()
 
-	for _, channel := range b.Channels {
-		go s.doSlackTask(channel, b, myParam)
-	}
-
+	go s.doSlackTask(b.Channel, b, myParam)
 	return nil
 }
 
@@ -81,7 +77,6 @@ func (b *SlackRequest) buildParam() []slack.MsgOption {
 		IconURL:     b.IconURL,
 		IconEmoji:   b.IconEmoji,
 		Markdown:    b.Markdown,
-		EscapeText:  b.EscapeText,
 	}
 
 	options = append(options, slack.MsgOptionPostMessageParameters(postParameters))
@@ -109,7 +104,7 @@ func (b *SlackRequest) checkParam() error {
 	if _, ok := Gateway[b.Workspace]; !ok {
 		return errors.New("workspace not found")
 	}
-	if len(b.Channels) == 0 {
+	if b.Channel == "" {
 		return errors.New("channel is required")
 	}
 	if len(b.Blocks) == 0 && len(b.Attachments) == 0 && b.Text == "" {
