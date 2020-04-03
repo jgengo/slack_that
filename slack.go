@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"sync"
 
 	"github.com/slack-go/slack"
 	"golang.org/x/time/rate"
@@ -31,7 +32,10 @@ type SlackRequest struct {
 
 // SlackTask ...
 type SlackTask struct {
-	limit *rate.Limiter
+	limit          *rate.Limiter
+	activeTasks    uint
+	maxActiveTasks uint
+	mu             sync.Mutex
 }
 
 func newSlackTask() *SlackTask {
@@ -43,6 +47,10 @@ func newSlackTask() *SlackTask {
 func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []slack.MsgOption) {
 	s.limit.Wait(context.Background())
 
+	s.mu.Lock()
+	s.activeTasks--
+	s.mu.Unlock()
+
 	_, _, err := Gateway[body.Workspace].PostMessage(channel, options...)
 
 	if err != nil {
@@ -52,11 +60,29 @@ func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []sl
 	}
 }
 
+// NewHealthResponse returns the size of the tasks queue
+func NewHealthResponse() HealthResponse {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return HealthResponse{
+		Success:        "ok",
+		ActiveTasks:    s.activeTasks,
+		MaxActiveTasks: s.maxActiveTasks,
+	}
+}
+
 // ProcessCreate will threat the body and do the job!
 func (b *SlackRequest) ProcessCreate() error {
 	if err := b.checkParam(); err != nil {
 		return err
 	}
+
+	s.mu.Lock()
+	s.activeTasks++
+	if s.activeTasks > s.maxActiveTasks {
+		s.maxActiveTasks = s.activeTasks
+	}
+	s.mu.Unlock()
 
 	myParam := b.buildParam()
 

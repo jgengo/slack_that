@@ -18,6 +18,13 @@ type SuccessResponse struct {
 	Success string `json:"success"`
 }
 
+// HealthResponse struct to respond back to health request
+type HealthResponse struct {
+	Success        string `json:"success"`
+	ActiveTasks    uint   `json:"active_tasks"`
+	MaxActiveTasks uint   `json:"max_active_tasks"`
+}
+
 // Index is called when it receives a GET on /
 func Index(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./static/index.html")
@@ -55,5 +62,5 @@ func Create(w http.ResponseWriter, r *http.Request) {
 // Health for health checking the service.
 func Health(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(SuccessResponse{"ok"})
+	json.NewEncoder(w).Encode(NewHealthResponse())
 }
