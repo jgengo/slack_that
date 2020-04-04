@@ -61,10 +61,10 @@ func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []sl
 }
 
 // NewHealthResponse returns the size of the tasks queue
-func NewHealthResponse() HealthResponse {
+func NewHealthResponse() *HealthResponse {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	return HealthResponse{
+	return &HealthResponse{
 		ActiveTasks:    s.activeTasks,
 		MaxActiveTasks: s.maxActiveTasks,
 	}
