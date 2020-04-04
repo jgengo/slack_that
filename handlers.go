@@ -20,9 +20,8 @@ type SuccessResponse struct {
 
 // HealthResponse struct to respond back to health request
 type HealthResponse struct {
-	Success        string `json:"success"`
-	ActiveTasks    uint   `json:"active_tasks"`
-	MaxActiveTasks uint   `json:"max_active_tasks"`
+	ActiveTasks    uint `json:"active_tasks"`
+	MaxActiveTasks uint `json:"max_active_tasks"`
 }
 
 // Index is called when it receives a GET on /

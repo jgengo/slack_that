@@ -65,7 +65,6 @@ func NewHealthResponse() HealthResponse {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	return HealthResponse{
-		Success:        "ok",
 		ActiveTasks:    s.activeTasks,
 		MaxActiveTasks: s.maxActiveTasks,
 	}
