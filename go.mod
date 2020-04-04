@@ -3,7 +3,6 @@ module github.com/jgengo/slack_that
 go 1.13
 
 require (
-	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.4
 	github.com/slack-go/slack v0.6.3
 	github.com/spf13/viper v1.6.2
