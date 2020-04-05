@@ -28,3 +28,7 @@ To avoid spreading your tokens in all your services and import a slack library w
 ### Ideas
 
 Run out of ideas, atm.
+
+### Contributors
+
+- Gustavo Belfort <a href="https://github.com/Gustavobelfort">(Gustavobelfort)</a>
