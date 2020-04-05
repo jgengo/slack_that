@@ -12,7 +12,7 @@ VERSION := $(shell git describe --tags --always --dirty)
 
 SRC_DIRS := cmd pkg internal # directories which hold app source (not vendored)
 
-ALL_PLATFORMS := darwin/amd64
+ALL_PLATFORMS := linux/amd64 darwin/amd64
 
 # Used internally.  Users should pass GOOS and/or GOARCH.
 OS := $(if $(GOOS),$(GOOS),$(shell go env GOOS))
@@ -41,7 +41,7 @@ container-%:
 	    --no-print-directory              \
 	    GOOS=$(firstword $(subst _, ,$*)) \
 	    GOARCH=$(lastword $(subst _, ,$*))
-
+                                                                                                                                                                            
 push-%:
 	@$(MAKE) push                         \
 	    --no-print-directory              \
@@ -122,8 +122,8 @@ container: .container-$(DOTFILE_IMAGE) say_container_name
 	    -e 's|{ARG_ARCH}|$(ARCH)|g'      \
 	    -e 's|{ARG_OS}|$(OS)|g'          \
 	    -e 's|{ARG_FROM}|$(BASEIMAGE)|g' \
-	    ./build/Dockerfile.in > .dockerfile-$(OS)_$(ARCH)
-	@docker build -t $(IMAGE):$(TAG) -f .dockerfile-$(OS)_$(ARCH) .
+	    ./build/Dockerfile.in > Dockerfile-$(OS)_$(ARCH)
+	@docker build -t $(IMAGE):$(TAG) -f Dockerfile-$(OS)_$(ARCH) .
 	@docker images -q $(IMAGE):$(TAG) > $@
 
 say_container_name:
@@ -175,7 +175,7 @@ $(BUILD_DIRS):
 clean: container-clean bin-clean
 
 container-clean:
-	rm -rf .container-* .dockerfile-* .push-*
+	rm -rf .container-* Dockerfile-* .push-*
 
 bin-clean:
 	rm -rf .go bin

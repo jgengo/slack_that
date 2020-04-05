@@ -14,23 +14,28 @@ import (
 
 var s = newSlackTask()
 
+type SlackClient struct {
+	Value *slack.Client
+}
+
 // Gateway is the Slack API client gateway
-var Gateway = make(map[string]*slack.Client)
+var Gateway = make(map[string]SlackClient)
 
 // SlackRequest ...
 type SlackRequest struct {
 	Workspace   string               `json:"workspace"`
 	Channel     string               `json:"channel"`
+	UserEmail   string               `json:"userEmail"`
 	Username    string               `json:"username"`
-	AsUser      bool                 `json:"as_user"`
 	Parse       string               `json:"parse"`
-	LinkNames   int                  `json:"link_names"`
-	UnfurlLinks bool                 `json:"unfurl_links"`
-	UnfurlMedia bool                 `json:"unfurl_media"`
 	IconURL     string               `json:"icon_url"`
 	IconEmoji   string               `json:"icon_emoji"`
-	Markdown    bool                 `json:"mrkdwn,omitempty"`
 	Text        string               `json:"text"`
+	LinkNames   int                  `json:"link_names"`
+	AsUser      bool                 `json:"as_user"`
+	UnfurlLinks bool                 `json:"unfurl_links"`
+	UnfurlMedia bool                 `json:"unfurl_media"`
+	Markdown    bool                 `json:"mrkdwn,omitempty"`
 	Blocks      []slack.SectionBlock `json:"blocks"`
 	Attachments []slack.Attachment   `json:"attachments"`
 }
@@ -56,7 +61,15 @@ func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []sl
 	s.activeTasks--
 	s.mu.Unlock()
 
-	_, _, err := Gateway[body.Workspace].PostMessage(channel, options...)
+	if body.UserEmail != "" {
+		if imChannel, err := Gateway[body.Workspace].GetIM(body.UserEmail); err != nil {
+			log.Printf("%sslack (error)%s while trying to get user IM ID. (%v)\n", utils.Red, utils.Reset, err)
+		} else {
+			channel = imChannel
+		}
+	}
+
+	_, _, err := Gateway[body.Workspace].Value.PostMessage(channel, options...)
 
 	if err != nil {
 		log.Printf("%sslack (error)%s while trying to PostMessage(). (%v)\n", utils.Red, utils.Reset, err)
@@ -133,9 +146,6 @@ func (b *SlackRequest) checkParam() error {
 	}
 	if _, ok := Gateway[b.Workspace]; !ok {
 		return errors.New("workspace not found")
-	}
-	if b.Channel == "" {
-		return errors.New("channel is required")
 	}
 	if len(b.Blocks) == 0 && len(b.Attachments) == 0 && b.Text == "" {
 		return errors.New("text is required")

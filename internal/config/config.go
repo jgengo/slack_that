@@ -58,12 +58,14 @@ func load() {
 	}
 
 	for k, v := range tokens {
-		task.Gateway[k] = slack.New(v)
-		_, err := task.Gateway[k].AuthTest()
+		task.Gateway[k] = task.SlackClient{
+			Value: slack.New(v),
+		}
+		_, err := task.Gateway[k].Value.AuthTest()
 		if err != nil {
 			log.Printf(
-				"%sconfig (warning)%s auth test failed for '%s', deleted from the loaded tokens\n",
-				utils.Yellow, utils.Reset, k,
+				"%sconfig (warning)%s auth test failed for '%s', deleted from the loaded tokens\nERR:%s",
+				utils.Yellow, utils.Reset, k, err,
 			)
 			delete(task.Gateway, k)
 		} else {
