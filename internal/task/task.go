@@ -25,7 +25,7 @@ var Gateway = make(map[string]SlackClient)
 type SlackRequest struct {
 	Workspace   string               `json:"workspace"`
 	Channel     string               `json:"channel"`
-	UserEmail   string               `json:"userEmail"`
+	UserEmail   string               `json:"user_email"`
 	Username    string               `json:"username"`
 	Parse       string               `json:"parse"`
 	IconURL     string               `json:"icon_url"`
@@ -146,6 +146,9 @@ func (b *SlackRequest) checkParam() error {
 	}
 	if _, ok := Gateway[b.Workspace]; !ok {
 		return errors.New("workspace not found")
+	}
+	if b.UserEmail == "" && b.Channel == "" {
+		return errors.New("channel is required")
 	}
 	if len(b.Blocks) == 0 && len(b.Attachments) == 0 && b.Text == "" {
 		return errors.New("text is required")

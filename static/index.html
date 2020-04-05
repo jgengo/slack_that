@@ -70,21 +70,24 @@
                 e.g: <code>"workspace": "my-workspace"</code> 
 
             <b>channel</b>
-                <i>required</i>
+                <i>required if no <a href="#user_email">user_email</a></i>
 
                 Channel, private group, or IM channel to send message to. 
                 Can be an encoded ID, or a name array.
-                    
+                
+                <i>If the user_email argument is set, the channel argument is substituted and used only as a fallback if the user_email is invalid.</i>
+
                 e.g: <code>"channel": "#report"</code>    
 
             
-            <b>UserEmail</b>
+            <b id="user_email">user_email</b>
                 <i>optional</i>
                 
                 Email of the user to send the private message to.
-                If the UserEmail Argument is passed, the channel one is substituted and used only as a fallback if the email is invalid.
-                    
-                e.g: <code>"channel": "#report"</code>   
+                
+                <i>If the user_email argument is set, the channel argument is substituted and used only as a fallback if the user_email is invalid.</i>
+                
+                e.g: <code>"user_email": "employee2@company.com"</code>   
 
             <b>text</b>
                 <i>required if no <a href="#blocks">blocks</a> or <a href="#attachments">attachments</a></i>
@@ -171,6 +174,8 @@
                 e.g: <code>"attachments": [{"pretext": "pre-hello", "text": "text-world"}]</code>
 
     <b>POST EXAMPLE</b>
+
+        <b>message a channel</b>
     <pre>
 {
     "workspace": "my-workspace",  
@@ -204,5 +209,19 @@
     ],
     "icon_emoji": ":rolled_up_newspaper:"
 }
+</pre>
+
+
+        <b>message a user</b>
+    <pre>
+{
+    "workspace": "my-workspace",  
+    "channel": "#report",
+    "user_email": "employee2@company.com",
+    "username": "News",
+    "text": "Hello! your travel documents are available at the administration office",
+    "icon_emoji": ":paperclip:"
+}
     </pre>
-    </pre>
+
+</pre>
