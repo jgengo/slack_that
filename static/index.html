@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,31 +10,35 @@
 </head>
 
 <style>
-    body {font-family: 'Baloo Thambi 2', cursive;}
+    body {
+        font-family: 'Baloo Thambi 2', cursive;
+    }
 
     pre {
         white-space: pre-wrap;
         word-wrap: break-word;
         word-break: normal;
     }
-    pre code { 
-        background-color: #f8f8f8; 
+
+    pre code {
+        background-color: #f8f8f8;
         color: #e01e5a;
         white-space: normal;
         font-size: 0.75rem;
         border: 1px solid #ddd;
         border-radius: 0.2rem;
-        margin: 10px 0 10px 0; 
+        margin: 10px 0 10px 0;
         padding: 2px 3px 1px;
         display: inline-block;
-        }
+    }
+
     pre pre {
         margin-left: 5em;
         margin-top: 4px;
         margin-bottom: 4px;
         padding: 8px;
         border: 1px solid #ddd;
-        background-color: #f8f8f8; 
+        background-color: #f8f8f8;
         tab-size: 4;
         border-radius: 4px;
         display: inline-block
@@ -71,6 +76,15 @@
                 Can be an encoded ID, or a name array.
                     
                 e.g: <code>"channel": "#report"</code>    
+
+            
+            <b>UserEmail</b>
+                <i>optional</i>
+                
+                Email of the user to send the private message to.
+                If the UserEmail Argument is passed, the channel one is substituted and used only as a fallback if the email is invalid.
+                    
+                e.g: <code>"channel": "#report"</code>   
 
             <b>text</b>
                 <i>required if no <a href="#blocks">blocks</a> or <a href="#attachments">attachments</a></i>
@@ -191,5 +205,4 @@
     "icon_emoji": ":rolled_up_newspaper:"
 }
     </pre>
-</pre>
-
+    </pre>
