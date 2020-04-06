@@ -26,7 +26,7 @@ var Gateway = make(map[string]SlackClient)
 type SlackRequest struct {
 	Workspace   string               `json:"workspace"`
 	Channel     string               `json:"channel"`
-	UserEmails  []string             `json:"user_email"`
+	UserEmails  []string             `json:"user_emails"`
 	Username    string               `json:"username"`
 	Parse       string               `json:"parse"`
 	IconURL     string               `json:"icon_url"`
