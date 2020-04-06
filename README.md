@@ -2,9 +2,8 @@
 
 <div align="center">
   <sub>Created by <a href="">Jordane Gengo (Titus)</a></sub>
-  <sub><img src="https://goreportcard.com/badge/github.com/jgengo/slack_that" /></sub>
 </div>
-
+<img src="https://goreportcard.com/badge/github.com/jgengo/slack_that" />
 ## Description
 
 `Slack That!` is a microservice to deploy a slack posting message gateway designed to also work for multi workspace.
