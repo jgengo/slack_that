@@ -26,7 +26,7 @@ var Gateway = make(map[string]SlackClient)
 type SlackRequest struct {
 	Workspace   string               `json:"workspace"`
 	Channel     string               `json:"channel"`
-	UserEmail   string               `json:"user_email"`
+	UserEmails  []string             `json:"user_email"`
 	Username    string               `json:"username"`
 	Parse       string               `json:"parse"`
 	IconURL     string               `json:"icon_url"`
@@ -55,6 +55,18 @@ func newSlackTask() *SlackTask {
 	}
 }
 
+func getChannel(b *SlackRequest, email string) (string, error) {
+	if imChannel, err := Gateway[b.Workspace].GetIM(email); err != nil {
+		log.Printf("%sslack (error)%s while trying to get user IM ID. (%v)\n", utils.Red, utils.Reset, err)
+	} else {
+		return imChannel, nil
+	}
+	if b.Channel != "" {
+		return b.Channel, nil
+	}
+	return "", errors.New("email invalid and no channel fallback set")
+}
+
 func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []slack.MsgOption) {
 	s.limit.Wait(context.Background())
 
@@ -62,16 +74,7 @@ func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []sl
 	s.activeTasks--
 	s.mu.Unlock()
 
-	if body.UserEmail != "" {
-		if imChannel, err := Gateway[body.Workspace].GetIM(body.UserEmail); err != nil {
-			log.Printf("%sslack (error)%s while trying to get user IM ID. (%v)\n", utils.Red, utils.Reset, err)
-		} else {
-			channel = imChannel
-		}
-	}
-
 	_, _, err := Gateway[body.Workspace].Value.PostMessage(channel, options...)
-
 	if err != nil {
 		log.Printf("%sslack (error)%s while trying to PostMessage(). (%v)\n", utils.Red, utils.Reset, err)
 	} else {
@@ -104,7 +107,18 @@ func (b *SlackRequest) ProcessCreate() error {
 
 	myParam := b.buildParam()
 
-	go s.doSlackTask(b.Channel, b, myParam)
+	if len(b.UserEmails) == 0 {
+		go s.doSlackTask(b.Channel, b, myParam)
+	} else {
+		for _, email := range b.UserEmails {
+			channel, err := getChannel(b, email)
+			if err != nil {
+				continue
+			}
+			go s.doSlackTask(channel, b, myParam)
+		}
+	}
+
 	return nil
 }
 
@@ -148,7 +162,7 @@ func (b *SlackRequest) checkParam() error {
 	if _, ok := Gateway[b.Workspace]; !ok {
 		return errors.New("workspace not found")
 	}
-	if b.UserEmail == "" && b.Channel == "" {
+	if len(b.UserEmails) == 0 && b.Channel == "" {
 		return errors.New("channel is required")
 	}
 	if len(b.Blocks) == 0 && len(b.Attachments) == 0 && b.Text == "" {

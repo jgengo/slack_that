@@ -70,24 +70,24 @@
                 e.g: <code>"workspace": "my-workspace"</code> 
 
             <b>channel</b>
-                <i>required if no <a href="#user_email">user_email</a></i>
+                <i>required if no <a href="#user_emails">user_emails</a></i>
 
                 Channel, private group, or IM channel to send message to. 
                 Can be an encoded ID, or a name array.
                 
-                <i>If the user_email argument is set, the channel argument is substituted and used only as a fallback if the user_email is invalid.</i>
+                <i>If the user_emails argument is set, the channel argument is substituted and used only as a fallback if the user_email is invalid.</i>
 
                 e.g: <code>"channel": "#report"</code>    
 
             
-            <b id="user_email">user_email</b>
+            <b id="user_emails">user_emails</b>
                 <i>optional</i>
                 
-                Email of the user to send the private message to.
+                Emails list of the users to send the private message to.
                 
-                <i>If the user_email argument is set, the channel argument is substituted and used only as a fallback if the user_email is invalid.</i>
+                <i>If the user_emails argument is set, the channel argument is substituted and used only as a fallback if the user_emails is invalid.</i>
                 
-                e.g: <code>"user_email": "employee2@company.com"</code>   
+                e.g: <code>"user_emails": ["employee2@company.com", "employee3@company.com"]</code>   
 
             <b>text</b>
                 <i>required if no <a href="#blocks">blocks</a> or <a href="#attachments">attachments</a></i>
@@ -217,7 +217,7 @@
 {
     "workspace": "my-workspace",  
     "channel": "#report",
-    "user_email": "employee2@company.com",
+    "user_emails": ["employee2@company.com"],
     "username": "News",
     "text": "Hello! your travel documents are available at the administration office",
     "icon_emoji": ":paperclip:"
