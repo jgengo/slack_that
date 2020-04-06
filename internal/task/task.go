@@ -14,6 +14,7 @@ import (
 
 var s = newSlackTask()
 
+// SlackClient is the slack client struct
 type SlackClient struct {
 	Value *slack.Client
 }

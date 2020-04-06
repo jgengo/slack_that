@@ -1,5 +1,6 @@
 package task
 
+// GetIM opens an IM channel with a specified userEmail
 func (c SlackClient) GetIM(userEmail string) (string, error) {
 
 	var userID string

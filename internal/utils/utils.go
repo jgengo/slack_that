@@ -1,5 +1,6 @@
 package utils
 
+// Color const for the terminal
 const (
 	Reset  = "\033[0m"
 	Red    = "\033[31m"
