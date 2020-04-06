@@ -3,6 +3,7 @@
 <div align="center">
   <sub>Created by <a href="">Jordane Gengo (Titus)</a></sub>
 </div>
+<img src="https://goreportcard.com/badge/github.com/jgengo/slack_that" />
 
 ## Description
 
