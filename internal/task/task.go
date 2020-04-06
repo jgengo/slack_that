@@ -55,18 +55,6 @@ func newSlackTask() *SlackTask {
 	}
 }
 
-func getChannel(b *SlackRequest, email string) (string, error) {
-	if imChannel, err := Gateway[b.Workspace].GetIM(email); err != nil {
-		log.Printf("%sslack (error)%s while trying to get user IM ID. (%v)\n", utils.Red, utils.Reset, err)
-	} else {
-		return imChannel, nil
-	}
-	if b.Channel != "" {
-		return b.Channel, nil
-	}
-	return "", errors.New("email invalid and no channel fallback set")
-}
-
 func (s *SlackTask) doSlackTask(channel string, body *SlackRequest, options []slack.MsgOption) {
 	s.limit.Wait(context.Background())
 
@@ -111,7 +99,7 @@ func (b *SlackRequest) ProcessCreate() error {
 		go s.doSlackTask(b.Channel, b, myParam)
 	} else {
 		for _, email := range b.UserEmails {
-			channel, err := getChannel(b, email)
+			channel, err := b.getChannel(email)
 			if err != nil {
 				continue
 			}
@@ -120,6 +108,18 @@ func (b *SlackRequest) ProcessCreate() error {
 	}
 
 	return nil
+}
+
+func (b *SlackRequest) getChannel(email string) (string, error) {
+	if imChannel, err := Gateway[b.Workspace].GetIM(email); err != nil {
+		log.Printf("%sslack (error)%s while trying to get user IM ID. (%v)\n", utils.Red, utils.Reset, err)
+	} else {
+		return imChannel, nil
+	}
+	if b.Channel != "" {
+		return b.Channel, nil
+	}
+	return "", errors.New("email invalid and no channel fallback set")
 }
 
 func (b *SlackRequest) buildParam() []slack.MsgOption {
