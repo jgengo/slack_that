@@ -22,7 +22,7 @@ type SlackClient struct {
 // Gateway is the Slack API client gateway
 var Gateway = make(map[string]SlackClient)
 
-// SlackRequest ...
+// SlackRequest contains all the parameters necessary (including the optional ones) for a PostMessage() request
 type SlackRequest struct {
 	Workspace   string               `json:"workspace"`
 	Channel     string               `json:"channel"`
@@ -41,7 +41,7 @@ type SlackRequest struct {
 	Attachments []slack.Attachment   `json:"attachments"`
 }
 
-// SlackTask ...
+// SlackTask contains the parameters for your task queue
 type SlackTask struct {
 	limit          *rate.Limiter
 	activeTasks    uint
