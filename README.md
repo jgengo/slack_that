@@ -4,13 +4,13 @@
   <sub>Created by <a href="">Jordane Gengo (Titus)</a></sub>
 </div>
 <img src="https://goreportcard.com/badge/github.com/jgengo/slack_that" />
+<img src="https://travis-ci.com/jgengo/slack_that.svg?branch=master" />
 
 ## Description
 
 `Slack That!` is a microservice to deploy a slack posting message gateway designed to also work for multi workspace.
 
 <img src="https://github.com/jgengo/slack_that/raw/master/static/slackthat_diagram.png" />
-[![Build Status](https://travis-ci.com/jgengo/slack_that.svg?branch=master)](https://travis-ci.com/jgengo/slack_that)
 ## Why?
 
 To avoid spreading your slack tokens in all your services and import a slack library when you can just easily send a HTTP POST to your micro service!
