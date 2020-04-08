@@ -18,6 +18,7 @@ git:
 
 install:
   - go mod download
+  - export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
 
 go_import_path: github.com/jgengo/slack_that
 
