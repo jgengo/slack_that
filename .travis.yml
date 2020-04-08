@@ -3,7 +3,7 @@ dist: trusty
 language: go
 
 env:
-  - GO111MODULE=on 
+  - GO111MODULE=on
 
 os:
   - linux
@@ -13,14 +13,16 @@ go:
   - 1.13.x
   - 1.14.x
 
+install: true
+
 git:
   depth: 1
 
 script:
   - ./build/test.sh
-  - GOOS=linux go build
-  - GOOS=darwin go build
-  - GOOS=freebsd go build
+  - GOOS=linux go build -v ./vendor/
+  - GOOS=darwin go build -v ./vendor/
+  - GOOS=freebsd go build -v ./vendor/
   - sonar-scanner
 
 
