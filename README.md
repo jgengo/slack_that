@@ -3,8 +3,9 @@
 <div align="center">
   <sub>Created by <a href="">Jordane Gengo (Titus)</a></sub>
 </div>
-<img src="https://goreportcard.com/badge/github.com/jgengo/slack_that" />
-<img src="https://travis-ci.com/jgengo/slack_that.svg?branch=master" />
+
+[![Go Report](https://goreportcard.com/badge/github.com/jgengo/slack_that)](https://goreportcard.com/badge/github.com/jgengo/slack_that) [![Build Status](https://travis-ci.com/jgengo/slack_that.svg?branch=master)](https://travis-ci.com/jgengo/slack_that)
+
 
 ## Description
 
