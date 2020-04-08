@@ -3,7 +3,7 @@ dist: trusty
 language: go
 
 env:
-  - GO111MODULE=on
+  - GO111MODULE=on GOFLAGS="-mod=vendor"
 
 os:
   - linux
