@@ -24,7 +24,7 @@ go_import_path: github.com/jgengo/slack_that
 
 script:
   - ./build/test.sh
-  - make build
+  - go build -mod=vendor ./... 
   - sonar-scanner
 
 
