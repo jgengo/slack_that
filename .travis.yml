@@ -13,16 +13,15 @@ go:
   - 1.13.x
   - 1.14.x
 
-install: true
-
 git:
   depth: 1
 
+before_install:
+  - go get github.com/jgengo/slack_that
+
 script:
   - ./build/test.sh
-  - GOOS=linux go build -mod=vendor
-  - GOOS=darwin go build -mod=vendor
-  - GOOS=freebsd go build -mod=vendor
+  - make
   - sonar-scanner
 
 
