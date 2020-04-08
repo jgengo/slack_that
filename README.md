@@ -10,6 +10,7 @@
 `Slack That!` is a microservice to deploy a slack posting message gateway designed to also work for multi workspace.
 
 <img src="https://github.com/jgengo/slack_that/raw/master/static/slackthat_diagram.png" />
+<img src="https://api.travis-ci.com/jgengo/slack_that.svg" />
 
 ## Why?
 
