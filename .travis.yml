@@ -20,9 +20,9 @@ git:
 
 script:
   - ./build/test.sh
-  - GOOS=linux go build -v ./vendor/
-  - GOOS=darwin go build -v ./vendor/
-  - GOOS=freebsd go build -v ./vendor/
+  - GOOS=linux go build -mod=vendor
+  - GOOS=darwin go build -mod=vendor
+  - GOOS=freebsd go build -mod=vendor
   - sonar-scanner
 
 
