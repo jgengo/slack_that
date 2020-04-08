@@ -10,6 +10,9 @@ VERSION := $(shell git describe --tags --always --dirty)
 ### These variables should not need tweaking.
 ###
 
+GOFILES := $(shell find . -name "*.go" -not -path "./vendor/*")
+GOFMT ?= gofmt "-s"
+
 SRC_DIRS := cmd pkg internal # directories which hold app source (not vendored)
 
 ALL_PLATFORMS := linux/amd64 darwin/amd64
@@ -67,6 +70,21 @@ BUILD_DIRS := bin/$(OS)_$(ARCH)     \
 OUTBIN = bin/$(OS)_$(ARCH)/$(BIN)
 $(OUTBIN): .go/$(OUTBIN).stamp
 	@true
+
+
+.PHONY: fmt
+fmt:
+	$(GOFMT) -w $(GOFILES)
+
+.PHONY: fmt-check
+fmt-check:
+	@diff=$$($(GOFMT) -d $(GOFILES)); \
+	if [ -n "$$diff" ]; then \
+		echo "Please run 'make fmt' and commit the result:"; \
+		echo "$${diff}"; \
+		exit 1; \
+	fi;
+
 
 # This will build the binary under ./.go and update the real binary iff needed.
 .PHONY: .go/$(OUTBIN).stamp
