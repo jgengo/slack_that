@@ -50,132 +50,132 @@
     slackthat!(1)                                SLACKTHAT!                                slackthat!(1)
 
 
-    <b>DESCRIPTION</b>
+    <strong>DESCRIPTION</strong>
             <code>SlackThat!</code> is a microservice to handle simple message posting to multi Slack workspace.
             The main goal is to avoid spreading your tokens in all your services and import a slack 
             library when you can just simply send a HTTP POST to your micro service!
 
 
-    <b>FACTS</b>
+    <strong>FACTS</strong>
             Method URL: <code>/</code>
            HTTP Method: <code>POST</code>
          Content-types: <code>application/json</code>
 
-    <b>ARGUMENTS</b>
-            <b>workspace</b>       
-                <i>required</i>
+    <strong>ARGUMENTS</strong>
+            <strong>workspace</strong>       
+                <em>required</em>
 
                 Workspace name to send the message
 
                 e.g: <code>"workspace": "my-workspace"</code> 
 
-            <b>channel</b>
-                <i>required if no <a href="#user_emails">user_emails</a></i>
+            <strong>channel</strong>
+                <em>required if no <a href="#user_emails">user_emails</a></em>
 
                 Channel, private group, or IM channel to send message to. 
                 Can be an encoded ID, or a name array.
                 
-                <i>If the user_emails argument is set, the channel argument is substituted and used only as a fallback if the user_email is invalid.</i>
+                <em>If the user_emails argument is set, the channel argument is substituted and used only as a fallback if the user_email is invalid.</em>
 
                 e.g: <code>"channel": "#report"</code>    
 
             
-            <b id="user_emails">user_emails</b>
-                <i>optional</i>
+            <strong id="user_emails">user_emails</strong>
+                <em>optional</em>
                 
                 Emails list of the users to send the private message to.
                 
-                <i>If the user_emails argument is set, the channel argument is substituted and used only as a fallback if the user_emails is invalid.</i>
+                <em>If the user_emails argument is set, the channel argument is substituted and used only as a fallback if the user_emails is invalid.</em>
                 
                 e.g: <code>"user_emails": ["employee2@company.com", "employee3@company.com"]</code>   
 
-            <b>text</b>
-                <i>required if no <a href="#blocks">blocks</a> or <a href="#attachments">attachments</a></i>
+            <strong>text</strong>
+                <em>required if no <a href="#blocks">blocks</a> or <a href="#attachments">attachments</a></em>
 
                 Message to send.
                 
                 e.g: <code>"text": "Hello World!"</code>
-            <b>as_user</b>    
-                <i>optional</i>
+            <strong>as_user</strong>    
+                <em>optional</em>
 
                 Pass true to post the message as the authed user, instead of as a bot. 
                 Defaults to false
 
                 e.g: <code>"as_user": true</code>
 
-            <b>username</b>
-                <i>optional</i>
+            <strong>username</strong>
+                <em>optional</em>
 
                 Set your bot's user name. Must be used in conjunction with <code>as_user</code> 
                 set to false, otherwise ignored.
     
                 e.g: <code>"username": "My Bot"</code>
 
-            <b>parse</b>
-                <i>optional</i>
+            <strong>parse</strong>
+                <em>optional</em>
 
                 Change how messages are treated. Defaults to <code>none</code>. See <a href="https://api.slack.com/methods/chat.postMessage#formatting">here</a>.
                 e.g: <code>"parse": "full"</code>
 
-            <b>link_names</b>
-                <i>optional</i>
+            <strong>link_names</strong>
+                <em>optional</em>
 
                 Find and link channel names and usernames.
 
                 e.g: <code>"link_names": true</code>
 
-            <b>unfurl_links</b>
-                <i>optional</i>
+            <strong>unfurl_links</strong>
+                <em>optional</em>
 
                 Pass true to enable unfurling of primarily text-based content.
 
                 e.g: <code>"unfurl_links": true</code>
 
-            <b>unfurl_media</b>         
-                <i>optional</i>
+            <strong>unfurl_media</strong>         
+                <em>optional</em>
 
                 Pass false to disable unfurling of media content.
 
                 e.g: <code>"unfurl_media": true</code>
 
-            <b>icon_url</b>         
-                <i>optional</i>
+            <strong>icon_url</strong>         
+                <em>optional</em>
                 
                 URL to an image to use as the icon for this message. Must be used 
                 in conjunction with as_user set to false, otherwise ignored. See <a href="https://api.slack.com/methods/chat.postMessage#authorship">authorship</a>. 
                 e.g: <code>"icon_url": "http://lorempixel.com/48/48"</code>
 
-            <b>icon_emoji</b>
-                <i>optional</i>
+            <strong>icon_emoji</strong>
+                <em>optional</em>
 
                 Emoji to use as the icon for this message. Overrides icon_url. Must be used 
                 in conjunction with as_user set to false, otherwise ignored. See <a href="https://api.slack.com/methods/chat.postMessage#authorship">authorship</a>. 
                 e.g: <code>"icon_emoji": ":joy:"</code>
 
-            <b>mrkdwn</b>
-                <i>optional</i>
+            <strong>mrkdwn</strong>
+                <em>optional</em>
                 
                 Disable Slack markup parsing by setting to false. Enabled by default
 
                 e.g: <code>"mrkdwn": false</code>
 
-            <b id="blocks">blocks</b>
-                <i>optional</i>
+            <strong id="blocks">blocks</strong>
+                <em>optional</em>
                 
                 A JSON-based array of structured <a href="https://api.slack.com/messaging/composing/layouts#adding-blocks">blocks</a>, presented as a URL-encoded string.
 
                 e.g: <code>"blocks": [{"type": "section", "text": {"type": "plain_text", "text": "Hello"}}]</code>
 
-            <b id="attachments">attachments</b>
-                <i>optional</i>
+            <strong id="attachments">attachments</strong>
+                <em>optional</em>
 
                 A JSON-based array of structured <a href="https://api.slack.com/messaging/composing/layouts#attachments">attachments</a>, presented as a URL-encoded string.
 
                 e.g: <code>"attachments": [{"pretext": "pre-hello", "text": "text-world"}]</code>
 
-    <b>POST EXAMPLE</b>
+    <strong>POST EXAMPLE</strong>
 
-        <b>message a channel</b>
+        <strong>message a channel</strong>
     <pre>
 {
     "workspace": "my-workspace",  
@@ -212,7 +212,7 @@
 </pre>
 
 
-        <b>message a user</b>
+        <strong>message a user</strong>
     <pre>
 {
     "workspace": "my-workspace",  

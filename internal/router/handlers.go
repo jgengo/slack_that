@@ -29,20 +29,20 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err := json.Unmarshal(body, bodyParsed); err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
-		json.NewEncoder(w).Encode(utils.ErrorResponse{err.Error()})
+		json.NewEncoder(w).Encode(utils.ErrorResponse{Error: err.Error()})
 		log.Printf("%sjson: (warning)%s while unmarshalling the body's request. (%v)\n", utils.Yellow, utils.Reset, err)
 		return
 	}
 
 	if err := bodyParsed.ProcessCreate(); err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
-		json.NewEncoder(w).Encode(utils.ErrorResponse{err.Error()})
+		json.NewEncoder(w).Encode(utils.ErrorResponse{Error: err.Error()})
 		log.Printf("%sjson: (warning)%s while processing ProcessCreate(). (%v)\n", utils.Yellow, utils.Reset, err)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(utils.SuccessResponse{"request queued"})
+	json.NewEncoder(w).Encode(utils.SuccessResponse{Success: "request queued"})
 }
 
 // Health for health checking the service.
