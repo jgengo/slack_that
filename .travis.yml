@@ -16,8 +16,10 @@ go:
 git:
   depth: 1
 
-before_install:
-  - go get github.com/jgengo/slack_that
+install:
+  - go mod download
+
+go_import_path: github.com/jgengo/slack_that
 
 script:
   - ./build/test.sh
