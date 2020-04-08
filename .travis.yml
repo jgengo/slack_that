@@ -23,6 +23,7 @@ install:
 go_import_path: github.com/jgengo/slack_that
 
 script:
+  - echo `ls -LR /home/travis/gopath/src/github.com/`
   - ./build/test.sh
   - go build -mod=vendor ./... 
   - sonar-scanner
