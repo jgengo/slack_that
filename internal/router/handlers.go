@@ -20,7 +20,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 func Create(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		log.Panicf("%shttp (warning)%s while reading the body's request. (%v)\n", utils.Yellow, utils.Reset, err)
+		log.Printf("%shttp (warning)%s while reading the body's request. (%v)\n", utils.Yellow, utils.Reset, err)
 		return
 	}
 	defer r.Body.Close()
