@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-const configFile = "config.yml"
+const configFile = "./configs/config.yml"
 
 func check() error {
 	fd, err := filepath.Abs(configFile)

@@ -7,6 +7,8 @@
 [![Go Report](https://goreportcard.com/badge/github.com/jgengo/slack_that)](https://goreportcard.com/badge/github.com/jgengo/slack_that) [![Build Status](https://travis-ci.com/jgengo/slack_that.svg?branch=master)](https://travis-ci.com/jgengo/slack_that)
 
 
+## Work in Progress.
+
 ## Description
 
 `Slack That!` is a microservice to deploy a slack posting message gateway designed to also work for multi workspace.
@@ -17,7 +19,15 @@
 
 To avoid spreading your slack tokens in all your services and import a slack library when you can just easily send a HTTP POST to your micro service!
 
-## Work in Progress.
+## Installing instructions
+
+You need to create your config.yml with your workspace name as key and the slack token app as value. 
+
+You can copy the sample provided to create your own:
+
+```bash
+cp ./configs/config.sample.yml ./configs/config.yml
+```
 
 ### Tasks 
 
