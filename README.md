@@ -19,6 +19,10 @@
 
 To avoid spreading your slack tokens in all your services and import a slack library when you can just easily send a HTTP POST to your micro service!
 
+At the moment, this micro-service is only meant to be used in a closed network and not exposed to external.
+
+For example, you can run it in a specific docker network and add to this network the other services you want to allow to reach the microservice.
+
 ## Installing instructions
 
 You need to create your config.yml with your workspace name as key and the slack token app as value. 
