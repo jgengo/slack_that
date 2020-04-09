@@ -2,6 +2,10 @@ dist: trusty
 
 language: go
 
+addons:
+  sonarcloud:
+    organization: "jgengo"
+
 env:
   - GO111MODULE=on GOFLAGS="-mod=vendor"
 
@@ -26,10 +30,3 @@ script:
   - ./build/test.sh
   - go build -mod=vendor ./... 
   - sonar-scanner
-
-
-addons:
-  sonarcloud:
-    organization: "jgengo"
-    token:
-      secure: m4MTvjb7qCfHlGtgNiM/kiKthlWypT/MR3M6MGNKJD/ed6SpSvbTiD5k0SeycOY37jC+nv3V0bne9CNTbo8vjnkPxmJPjN4Xv3tEWN6ZPkruutFiqoIsNsmjlJD35tWG5rbWTqQFSHbI6tMk+C7Ryj/RG2Kg0fL/aIuDlpGDF2Wo/BZrZTu1uoXRgdJQzdSmnPUqmt1cPbPno7nlQVslSFJaIKwjW4Pkn/V7FK7+Y2OKfBY/GWJonV5l3CXVu497S6ogNb1ELU8V/U+jGunlnEzWLia1+XOch6h1XPICddQpDLSFu96fqbZEBV6FsOWNIyFfkpJGO8dpxQnEcYydOY5wcGEsyBVFFC/Pab6R8h5lRUrLtACR4zrFLt0Ban/NZVijfzsg5bilCPB4u0fnLlonJEzNqHxBcIdGJKEe4fystDytoCpSCfOnNckbN5aejF0X8DCLqGba+yC7q2tKSFi2ocg0ziGb42Fg4CkqLr0AxtjZNuGv9BK+/wenAJ++DeuKnORmv+RSHNLN3yCjVxlmUgnsKY2J5Z6M3hecHl8+KODpk/18HQR/4uroUIjiLCTOV8Nizn+IA+7w9njNe7MkguhR8uGrMNKBa+PBS4Gz2CTe5Db2/cmlzEEwBRVeiGT3+cQoQibABTPVp5qN8aO4zDV8aWlZIxcKYeLxfSM=
