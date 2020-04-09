@@ -6,7 +6,6 @@ addons:
   sonarcloud:
     organization: "jgengo"
 
-
 env:
   - GO111MODULE=on GOFLAGS="-mod=vendor"
 
