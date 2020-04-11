@@ -1,5 +1,4 @@
 dist: trusty
-
 language: go
 
 addons:
@@ -8,7 +7,6 @@ addons:
 
 env:
   - GO111MODULE=on
-#GOFLAGS="-mod=vendor"
 
 os:
   - linux
@@ -20,13 +18,12 @@ go:
 
 git:
   depth: 1
+
 matrix:
   allow_failures:
     - go: master
   fast_finish: true
-# install:
-#  - go mod download
-#  - export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
+
 install:
   - # Do nothing. This is needed to prevent default install action "go get -t -v ./..." from happening here (we want it to happen inside script step).
 
