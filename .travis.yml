@@ -19,14 +19,21 @@ go:
 
 git:
   depth: 1
-
+matrix:
+  allow_failures:
+    - go: master
+  fast_finish: true
+# install:
+#  - go mod download
+#  - export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
 install:
-  - go mod download
-  - export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
+  - # Do nothing. This is needed to prevent default install action "go get -t -v ./..." from happening here (we want it to happen inside script step).
 
 go_import_path: github.com/jgengo/slack_that
 
 script:
-  - ./build/test.sh
-  - go build -mod=vendor ./... 
+  - go get -t -v ./...
+  - diff -u <(echo -n) <(gofmt -d -s `find . -name "*.go" -not -path "./vendor/*"`)
+  - go vet ./...
+  - go build -mod=vendor ./...
   - sonar-scanner
