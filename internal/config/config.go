@@ -51,10 +51,10 @@ func generateTokenMap(filename string) (map[string]string, error) {
 	return viper.GetStringMapString("slacks"), nil
 }
 
-func load() {
+func load() error {
 	tokens, err := generateTokenMap(configFile)
 	if err != nil {
-		log.Fatalf("%sconfig (error)%s error while parsing the config file. (%v)", utils.Red, utils.Reset, err)
+		return err
 	}
 
 	for k, v := range tokens {
@@ -64,24 +64,27 @@ func load() {
 		_, err := task.Gateway[k].Value.AuthTest()
 		if err != nil {
 			log.Printf(
-				"%sconfig (warning)%s auth test failed for '%s', deleted from the loaded tokens\nERR:%s",
+				"%sconfig (warning)%s auth test failed for '%s', deleted from the loaded tokens (ERR:%s)",
 				utils.Yellow, utils.Reset, k, err,
 			)
 			delete(task.Gateway, k)
 		} else {
 			log.Printf("config (info) auth test successful for '%s'.", k)
 		}
-
 	}
 
 	log.Println("config (info) config file successfully loaded.")
+	return nil
 }
 
 // Initiate checks for the config file, and if its its found, try to load it into the program
-func Initiate() {
+func Initiate() error {
 	log.Println("config (info) loading config...")
 	if err := check(); err != nil {
-		log.Fatalf("%sconfig (error)%s can't access '%s'. (%v)\n", utils.Red, utils.Reset, configFile, err)
+		return err
 	}
-	load()
+	if err := load(); err != nil {
+		return err
+	}
+	return nil
 }
